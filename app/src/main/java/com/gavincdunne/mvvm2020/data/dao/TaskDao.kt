@@ -1,8 +1,8 @@
 package com.gavincdunne.mvvm2020.data.dao
 
 import androidx.room.*
+import com.gavincdunne.mvvm2020.data.SortOrder
 import com.gavincdunne.mvvm2020.data.entity.Task
-import com.gavincdunne.mvvm2020.ui.viewmodel.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 @Dao

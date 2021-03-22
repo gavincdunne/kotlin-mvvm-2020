@@ -59,7 +59,7 @@ dependencies {
 
     // Lifecycle + ViewModel & LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0"
 //    implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
 
     // Navigation Component
