@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
     private val viewModel: TasksViewModel by viewModels()
+    private lateinit var searchView: SearchView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,6 +98,10 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                     is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
+                    is TasksViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
+                        val action = TasksFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
+                        findNavController().navigate(action)
+                    }
                 }.exhaustive
             }
         }
@@ -116,7 +121,14 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
         inflater.inflate(R.menu.menu_fragment_main, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
+
+        val pendingQuery = viewModel.searchQuery.value
+
+        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(pendingQuery, false)
+        }
 
         searchView.onQueryTextChanged {
             viewModel.searchQuery.value = it
@@ -144,9 +156,15 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                 true
             }
             R.id.action_delete_all_completed_tasks -> {
+                viewModel.onDeleteAllCompletedClick()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
     }
 }
